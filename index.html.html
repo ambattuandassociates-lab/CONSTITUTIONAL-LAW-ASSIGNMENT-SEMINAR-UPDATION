@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Constitutional Law Tracker</title>
+<style>
+*{box-sizing:border-box}
+body{font-family:Arial,sans-serif;margin:0;padding:8px;background:#f0f4f8}
+h1{text-align:center;color:#1a365d;font-size:18px;margin:8px 0 4px}
+.due{text-align:center;color:#e53e3e;font-weight:bold;font-size:16px;margin-bottom:10px}
+.section{margin:12px 0;background:white;padding:10px;border-radius:6px}
+h2{font-size:15px;color:#2b6cb0;margin:0 0 8px}
+table{width:100%;border-collapse:collapse}
+th{background:#2b6cb0;color:white;padding:7px;font-size:12px;text-align:left}
+td{padding:5px;border-bottom:1px solid #e2e8f0;font-size:13px}
+tr:nth-child(even){background:#f7fafc}
+.btn{padding:4px 8px;border:none;border-radius:4px;cursor:pointer;font-size:11px;min-width:70px}
+.sub{background:#cbd5e0}
+.sub.done{background:#3182ce;color:white}
+.acc{background:#cbd5e0}
+.acc.done{background:#38a169;color:white}
+.comp{background:#cbd5e0}
+.comp.done{background:#38a169;color:white}
+.pass{background:#fffbeb;border:1px solid #f6e05e;padding:6px;margin-bottom:8px;border-radius:4px;text-align:center;font-size:13px}
+</style>
+</head>
+<body>
+<h1>Constitutional Law</h1>
+<div class="due">Due Date: 30-10-2026</div>
+<div class="pass">Admin Password (for Accept / Completed): <input type="password" id="pw" size="6"></div>
+
+<div class="section">
+<h2>Assignment</h2>
+<table>
+<thead><tr><th>No</th><th>Name</th><th>Submit</th><th>Accept</th><th>Date</th></tr></thead>
+<tbody id="aBody"></tbody>
+</table>
+</div>
+
+<div class="section">
+<h2>Seminar</h2>
+<table>
+<thead><tr><th>No</th><th>Name</th><th>Completed</th><th>Date</th></tr></thead>
+<tbody id="sBody"></tbody>
+</table>
+</div>
+
+<script>
+const PASS="65";
+const names=["ABDUL RAHOOF TA","ABHILASH AS","AKMAL SULAIMAN","ALBIN SAJU","ALKKA PRADEEP","AMJAD KAREEM","ANANDHU SURESH","ANJANA SS","ANOOP BABY","ANUSREE CK","ANUSREE S","ASWATHI PA","ATHIRA KK","BABU VD","BARATH SANTHOSH","ELBIN SANTHOSH","FARIS MB","GIRI KR","GOURI NANDANA ES","GREESHMA NS","JASEENA P MATHEW","JIJO SAJU","KIRAN N V","KRISHNAPRIYA AR","LIJO JOSE","MINJU SHAJU","MUBASHIRA VK","MUHAMMED SAGEER PH","NANDANA KRISHNA","NANDHANA KR","NANDHANA PS","NIDHEESH MR","PARAMESWARAN K N","PRATHEEP M P","PRINCE VARGHESE","RAHUL KN","REFFEEQUE KARIAPARAMBATH","SASI NP","SAUMIA PL","SHAHNA S","SHIFANA SHERIN VA","SREELAKSHMI NS","SUGHIMOL S","SUMAYYA SALAH","THOMAS JAMES","UNNIKRISHNAN K","VISHNU PRIYA TH","YADU KRISHNAN M"];
+
+function fd(){const d=new Date();return String(d.getDate()).padStart(2,'0')+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+d.getFullYear();}
+function gd(){return JSON.parse(localStorage.getItem('trk')||'{}');}
+function sd(o){localStorage.setItem('trk',JSON.stringify(o));}
+
+function render(){
+  const d=gd();
+  let a='',s='';
+  names.forEach((n,i)=>{
+    const A=d['a'+i]||{}, S=d['s'+i]||{};
+    a+=`<tr><td>${i+1}</td><td>${n}</td>
+    <td><button class="btn sub ${A.sub?'done':''}" onclick="sub(${i})">${A.sub?'Submitted':'Submit'}</button></td>
+    <td><button class="btn acc ${A.acc?'done':''}" onclick="acc(${i})">${A.acc?'Accepted':'Accept'}</button></td>
+    <td>${A.date||''}</td></tr>`;
+    s+=`<tr><td>${i+1}</td><td>${n}</td>
+    <td><button class="btn comp ${S.done?'done':''}" onclick="sem(${i})">${S.done?'Completed':'Mark Completed'}</button></td>
+    <td>${S.date||''}</td></tr>`;
+  });
+  document.getElementById('aBody').innerHTML=a;
+  document.getElementById('sBody').innerHTML=s;
+}
+function sub(i){
+  const d=gd(); const k='a'+i; d[k]=d[k]||{}; d[k].sub=true; sd(d); render();
+}
+function acc(i){
+  if(document.getElementById('pw').value!==PASS){alert('Wrong password');return;}
+  const d=gd(); const k='a'+i; d[k]=d[k]||{}; d[k].acc=true; d[k].date=fd(); sd(d); render();
+}
+function sem(i){
+  if(document.getElementById('pw').value!==PASS){alert('Wrong password');return;}
+  const d=gd(); const k='s'+i; d[k]=d[k]||{}; d[k].done=true; d[k].date=fd(); sd(d); render();
+}
+render();
+</script>
+</body>
+</html>
